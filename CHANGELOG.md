@@ -5,6 +5,101 @@ Toutes les modifications notables de ce projet seront documentées ici.
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [0.2.0] - 2025-12-17
+
+### ✨ Ajouté (Added)
+
+#### ÉTAPE 1C : Docker + Auth Service Backend
+
+**Infrastructure Docker**
+- `docker-compose.yml` avec 2 services :
+  - **PostgreSQL 16 Alpine** (port 5432)
+    - Base de données `webudget_db`
+    - Volume persistant `postgres_data`
+    - Health check automatique
+  - **Adminer** (port 8080) - Interface web de gestion de la base de données
+
+**Auth Service (NestJS)**
+- Service d'authentification REST sur port 3001
+- Modules NestJS :
+  - `AppModule` : Module racine avec ConfigModule
+  - `PrismaModule` : Module global Prisma avec lifecycle hooks
+  - `AuthModule` : Module d'authentification (JWT + Passport)
+
+**Prisma ORM**
+- Schéma PostgreSQL (`prisma/schema.prisma`) :
+  - **User** : id, email (unique), password (bcrypt), name, avatar, role (enum), emailVerified, timestamps
+  - **RefreshToken** : id, token (unique), userId (FK cascade), expiresAt, createdAt
+  - **UserRole** enum : USER, ADMIN, PREMIUM
+- Migration initiale : `20251217151715_init`
+- Scripts npm : `prisma:generate`, `prisma:migrate`, `prisma:studio`
+
+**Authentification JWT**
+- Implémentation Passport + JWT Strategy
+- 2 types de tokens :
+  - **Access Token** : 15min (actions courtes)
+  - **Refresh Token** : 7 jours (renouvellement)
+- Rotation automatique des refresh tokens (anciens tokens supprimés)
+- JWT ID (jti) unique avec timestamp pour éviter les duplications
+- Hash bcrypt des mots de passe (10 rounds)
+
+**API REST (5 endpoints)**
+- `POST /auth/register` : Créer un compte utilisateur
+  - Body : `{ email, password, name }`
+  - Response : `{ user, accessToken, refreshToken }`
+- `POST /auth/login` : Se connecter
+  - Body : `{ email, password }`
+  - Response : `{ user, accessToken, refreshToken }`
+- `POST /auth/refresh` : Renouveler les tokens
+  - Body : `{ refreshToken }`
+  - Response : `{ accessToken, refreshToken }` (nouveaux)
+- `POST /auth/logout` : Se déconnecter (🔒 JWT requis)
+  - Supprime tous les refresh tokens de l'utilisateur
+- `GET /auth/me` : Récupérer les infos du user connecté (🔒 JWT requis)
+
+**Validation DTOs**
+- `RegisterDto` : Email valide, mot de passe min 8 caractères, nom requis
+- `LoginDto` : Email et mot de passe requis
+- Validation automatique via `class-validator` et `ValidationPipe`
+- Messages d'erreur personnalisés en français
+
+**Tests E2E**
+- 13 tests couvrant tous les endpoints (100% de succès)
+- Test suite avec Jest + Supertest
+- Tests des scénarios :
+  - Création d'utilisateur et rejet de doublons
+  - Validation des champs requis (400 Bad Request)
+  - Login avec credentials valides/invalides
+  - Accès protégé avec/sans token JWT
+  - Renouvellement de tokens avec rotation
+  - Déconnexion et nettoyage des tokens
+
+**Configuration**
+- Variables d'environnement (.env) :
+  - DATABASE_URL (PostgreSQL)
+  - JWT_ACCESS_SECRET / JWT_REFRESH_SECRET
+  - JWT_ACCESS_EXPIRATION / JWT_REFRESH_EXPIRATION
+  - CORS_ORIGIN (http://localhost:5173)
+  - PORT (3001)
+- TypeScript config adapté à NestJS :
+  - `module: "commonjs"`
+  - `moduleResolution: "node"`
+  - Decorators experimentaux activés
+  - Path alias : `@webudget/shared-types` → `../../packages/shared-types/dist`
+
+### 🐛 Corrigé (Fixed)
+- TypeScript `moduleResolution: "bundler"` incompatible avec CommonJS → changé en "node"
+- Build output dans mauvais répertoire (rootDir auto-détecté) → supprimé rootDir
+- Import shared-types en conflit avec rootDir → utilisation de dist/ au lieu de src/
+- Refresh tokens JWT identiques (déterministes) → ajout de jti (JWT ID) unique avec timestamp
+- Validation DTO retournant 500 au lieu de 400 → création de DTOs locaux avec class-validator
+
+### 💥 Breaking Changes
+- **Nécessite Docker** pour PostgreSQL (Docker Compose requis)
+- Changement d'architecture : passage de SQLite (prévu) à PostgreSQL en Docker
+
+---
+
 ## [0.1.0] - 2025-12-17
 
 ### ✨ Ajouté (Added)
