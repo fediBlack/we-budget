@@ -1,0 +1,53 @@
+{
+  // 🎯 Configuration TypeScript PARTAGÉE par tous les projets
+  // Chaque projet (backend/frontend/packages) va "extend" ce fichier
+  
+  "compilerOptions": {
+    // Cible ES2020 = JavaScript moderne (async/await, optional chaining, etc.)
+    "target": "ES2020",
+    
+    // Module ESNext = import/export modernes
+    "module": "ESNext",
+    
+    // Libraires disponibles (Promise, Map, Set, etc.)
+    "lib": ["ES2020"],
+    
+    // Comment résoudre les imports (bundler = pour Vite/Webpack)
+    "moduleResolution": "bundler",
+    
+    // Mode strict = détecte plus d'erreurs
+    "strict": true,
+    
+    // Permet import express from 'express' au lieu de import * as express
+    "esModuleInterop": true,
+    
+    // Ignore les erreurs dans node_modules (plus rapide)
+    "skipLibCheck": true,
+    
+    // Vérifie que les noms de fichiers sont cohérents (User.ts vs user.ts)
+    "forceConsistentCasingInFileNames": true,
+    
+    // Permet d'importer des JSON
+    "resolveJsonModule": true,
+    
+    // Génère les .d.ts (fichiers de déclaration TypeScript)
+    "declaration": true,
+    "declarationMap": true,
+    
+    // Génère les source maps (pour debugger)
+    "sourceMap": true,
+    
+    // Point de départ pour les imports relatifs
+    "baseUrl": ".",
+    
+    // 🔥 IMPORTANT : Chemins d'accès pour les imports entre packages
+    "paths": {
+      // Permet d'écrire: import { User } from '@webudget/shared-types'
+      "@webudget/shared-types": ["packages/shared-types/src/index.ts"],
+      "@webudget/shared-types/*": ["packages/shared-types/src/*"],
+      
+      "@webudget/shared-utils": ["packages/shared-utils/src/index.ts"],
+      "@webudget/shared-utils/*": ["packages/shared-utils/src/*"]
+    }
+  }
+}

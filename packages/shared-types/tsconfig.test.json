@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // 🎯 Active les types Jest pour les tests
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "noEmit": true
+  },
+  "include": ["tests/**/*", "src/**/*"]
+}

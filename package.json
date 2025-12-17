@@ -1,0 +1,41 @@
+{
+  "name": "webudget",
+  "version": "0.1.0",
+  "description": "WeBudget - Plateforme de gestion financière collaborative",
+  "private": true,
+  "author": "",
+  "license": "MIT",
+  
+  "scripts": {
+    "dev": "pnpm --parallel run dev",
+    "dev:backend": "pnpm --filter \"./backend/*\" --parallel run dev",
+    "dev:frontend": "pnpm --filter \"./frontend/*\" --parallel run dev",
+    
+    "build": "pnpm --recursive run build",
+    "build:backend": "pnpm --filter \"./backend/*\" run build",
+    "build:frontend": "pnpm --filter \"./frontend/*\" run build",
+    
+    "test": "pnpm --recursive run test",
+    "test:cov": "pnpm --recursive run test:cov",
+    
+    "lint": "pnpm --recursive run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    
+    "db:generate": "pnpm --filter \"./backend/*\" run prisma:generate",
+    "db:migrate": "pnpm --filter \"./backend/*\" run prisma:migrate",
+    "db:studio": "pnpm --filter \"./backend/auth-service\" run prisma:studio"
+  },
+  
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.3"
+  },
+  
+  "packageManager": "pnpm@8.15.0",
+  
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

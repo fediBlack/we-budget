@@ -1,0 +1,20 @@
+# 🎯 Configuration des Workspaces pnpm
+# Ce fichier dit à pnpm : "Voici mes projets dans ce monorepo"
+
+packages:
+  # Tous les dossiers dans packages/ sont des projets
+  # Exemple : packages/shared-types, packages/shared-utils
+  - 'packages/*'
+  
+  # Tous les services backend
+  # Exemple : backend/auth-service, backend/financial-service
+  - 'backend/*'
+  
+  # Toutes les applications frontend
+  # Exemple : frontend/webudget-app
+  - 'frontend/*'
+
+# 💡 Avec cette config, quand tu fais "pnpm install" :
+# - pnpm cherche tous les package.json dans ces dossiers
+# - Il crée des liens symboliques entre eux
+# - Les packages peuvent s'importer entre eux avec @webudget/xxx

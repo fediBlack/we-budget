@@ -1,0 +1,52 @@
+# 🎯 Fichiers à NE PAS commiter dans Git
+
+# Dépendances
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs (fichiers compilés)
+dist/
+build/
+*.tsbuildinfo
+
+# Environnement (contient des secrets comme JWT_SECRET)
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Tests
+coverage/
+.nyc_output/
+
+# IDE (Visual Studio Code, WebStorm, etc.)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Prisma
+*.db
+*.db-journal
+.prisma/
+
+# Temporary
+tmp/
+temp/
