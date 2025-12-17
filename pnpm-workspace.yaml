@@ -10,9 +10,8 @@ packages:
   # Exemple : backend/auth-service, backend/financial-service
   - 'backend/*'
   
-  # Toutes les applications frontend
-  # Exemple : frontend/webudget-app
-  - 'frontend/*'
+  # Frontend (un seul pour l'instant)
+  - 'frontend'
 
 # 💡 Avec cette config, quand tu fais "pnpm install" :
 # - pnpm cherche tous les package.json dans ces dossiers
