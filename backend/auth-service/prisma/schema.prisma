@@ -1,0 +1,54 @@
+// 🗄️ Prisma Schema - Définit la structure de la base de données
+// Documentation : https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 🎯 ENUMS - Importés depuis shared-types, redéfinis ici pour Prisma
+
+enum UserRole {
+  USER
+  ADMIN
+  PREMIUM
+}
+
+// 👤 USER - Utilisateur de l'application
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String   // Hash bcrypt
+  name          String
+  avatar        String?  // URL de la photo de profil
+  role          UserRole @default(USER)
+  emailVerified Boolean  @default(false)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // 🔗 Relations
+  refreshTokens RefreshToken[]
+
+  @@map("users")  // Nom de la table en base
+}
+
+// 🔄 REFRESH TOKEN - Pour renouveler l'access token
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  expiresAt DateTime
+  
+  createdAt DateTime @default(now())
+
+  // 🔗 Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}

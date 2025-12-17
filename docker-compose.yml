@@ -1,0 +1,48 @@
+# 🐳 Docker Compose Configuration
+# Ce fichier définit tous les services qui tournent ensemble
+
+version: '3.8'
+
+services:
+  # 🗄️ PostgreSQL - Base de données principale
+  postgres:
+    image: postgres:16-alpine  # Version légère de PostgreSQL 16
+    container_name: webudget-postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'  # Port accessible depuis l'hôte
+    environment:
+      # 🎯 Credentials (en dur pour le dev, .env en prod)
+      POSTGRES_USER: webudget
+      POSTGRES_PASSWORD: webudget_dev_password
+      POSTGRES_DB: webudget_db
+    volumes:
+      # 💾 Persiste les données (survit au redémarrage du container)
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # ✅ Vérifie que PostgreSQL est prêt
+      test: ['CMD-SHELL', 'pg_isready -U webudget']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 🌐 Adminer - Interface web pour gérer la DB
+  # Accès : http://localhost:8080
+  adminer:
+    image: adminer:latest
+    container_name: webudget-adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'  # Interface web
+    depends_on:
+      - postgres
+
+# 📦 Volumes persistants
+volumes:
+  postgres_data:
+    driver: local
+
+# 🔗 Réseau (optionnel, Docker en crée un par défaut)
+networks:
+  default:
+    name: webudget-network

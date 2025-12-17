@@ -1,0 +1,35 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    // 🎯 NestJS utilise CommonJS (Node.js)
+    "module": "commonjs",
+    "moduleResolution": "node",  // Compatible avec CommonJS
+    
+    // Decorators (requis pour NestJS)
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    
+    // Build
+    "declaration": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    
+    // Strict
+    "target": "ES2021",
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    
+    // 🎯 Types globaux (Jest pour les tests)
+    "types": ["node", "jest"]
+  },
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
