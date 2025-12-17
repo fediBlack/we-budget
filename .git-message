@@ -1,0 +1,29 @@
+# <type>(<scope>): <description courte (max 50 caractères)>
+#
+# [Corps optionnel : explication détaillée]
+#
+# [Footer : BREAKING CHANGE, closes #123, etc.]
+#
+# TYPES :
+#   feat     : Nouvelle fonctionnalité
+#   fix      : Correction de bug
+#   docs     : Documentation
+#   style    : Formatage (sans impact code)
+#   refactor : Refactoring
+#   test     : Tests
+#   chore    : Maintenance
+#   perf     : Performance
+#   ci       : CI/CD
+#
+# EXEMPLES :
+#   feat(auth): add JWT authentication
+#   fix(transaction): correct decimal precision
+#   docs: update README setup instructions
+#   test(user): add registration endpoint tests
+#
+# BREAKING CHANGE (si applicable) :
+#   BREAKING CHANGE: description du changement incompatible
+#
+# Références issues :
+#   closes #123
+#   fixes #456
