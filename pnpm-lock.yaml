@@ -141,6 +141,9 @@ importers:
       vue-router:
         specifier: ^4.3.0
         version: 4.6.4(vue@3.5.25)
+      vue3-ui-kit:
+        specifier: github:fediBlack/vue3-ui-kit#v0.1.0
+        version: github.com/fediBlack/vue3-ui-kit/b615e473f647cdce6fa338b3046f57eb306b1f81(vue@3.5.25)
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
@@ -7185,3 +7188,14 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  github.com/fediBlack/vue3-ui-kit/b615e473f647cdce6fa338b3046f57eb306b1f81(vue@3.5.25):
+    resolution: {tarball: https://codeload.github.com/fediBlack/vue3-ui-kit/tar.gz/b615e473f647cdce6fa338b3046f57eb306b1f81}
+    id: github.com/fediBlack/vue3-ui-kit/b615e473f647cdce6fa338b3046f57eb306b1f81
+    name: vue3-ui-kit
+    version: 0.1.0
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.5.25(typescript@5.4.5)
+    dev: false

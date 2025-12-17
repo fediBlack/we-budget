@@ -11,12 +11,13 @@
             <span class="text-sm text-gray-700">
               Bonjour, <strong>{{ authStore.user?.name }}</strong>
             </span>
-            <button
+            <Button
+              variant="danger"
+              size="sm"
               @click="handleLogout"
-              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
             >
               Déconnexion
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -107,6 +108,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { Button } from 'vue3-ui-kit';
 
 const router = useRouter();
 const authStore = useAuthStore();

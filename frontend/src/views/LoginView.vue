@@ -18,59 +18,43 @@
       <!-- Formulaire -->
       <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
         <!-- Message d'erreur -->
-        <div v-if="authStore.error" class="rounded-md bg-red-50 p-4">
-          <div class="flex">
-            <div class="ml-3">
-              <h3 class="text-sm font-medium text-red-800">
-                {{ authStore.error }}
-              </h3>
-            </div>
-          </div>
-        </div>
+        <Alert
+          v-if="authStore.error"
+          variant="error"
+          :title="authStore.error"
+        />
 
         <!-- Champs -->
-        <div class="rounded-md shadow-sm space-y-4">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
-              Adresse email
-            </label>
-            <input
-              id="email"
-              v-model="form.email"
-              type="email"
-              autocomplete="email"
-              required
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-              placeholder="vous@exemple.com"
-            />
-          </div>
+        <div class="space-y-4">
+          <Input
+            v-model="form.email"
+            type="email"
+            label="Adresse email"
+            placeholder="vous@exemple.com"
+            required
+            autocomplete="email"
+          />
 
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
-              Mot de passe
-            </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              autocomplete="current-password"
-              required
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-              placeholder="••••••••"
-            />
-          </div>
+          <Input
+            v-model="form.password"
+            type="password"
+            label="Mot de passe"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
         </div>
 
         <!-- Bouton -->
         <div>
-          <button
+          <Button
             type="submit"
+            :loading="authStore.loading"
             :disabled="authStore.loading"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full"
           >
-            <span v-if="!authStore.loading">Se connecter</span>
-            <span v-else>Connexion en cours...</span>
-          </button>
+            Se connecter
+          </Button>
         </div>
       </form>
     </div>
@@ -81,6 +65,7 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { Button, Input, Alert } from 'vue3-ui-kit';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -100,7 +85,3 @@ async function handleLogin() {
   }
 }
 </script>
-
-<style scoped>
-/* Styles Tailwind CSS appliqués directement */
-</style>
