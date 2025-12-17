@@ -5,6 +5,113 @@ Toutes les modifications notables de ce projet seront documentées ici.
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [0.3.0] - 2025-12-17
+
+### ✨ Ajouté (Added)
+
+#### ÉTAPE 1D : Frontend Vue 3 avec Authentification
+
+**Application Vue 3**
+- Vite comme bundler de développement (HMR ultra-rapide)
+- TypeScript strict mode
+- Pinia pour state management
+- Vue Router avec navigation guards
+- Tailwind CSS pour le styling
+- Port de développement : 5173
+
+**Gestion de l'authentification (Pinia Store)**
+- Store `useAuthStore` avec état réactif :
+  - `user` : Objet utilisateur connecté (id, email, name, role, avatar)
+  - `accessToken` / `refreshToken` : Tokens JWT
+  - `isAuthenticated` : Computed property (booléen)
+  - `isAdmin` / `isPremium` : Rôles utilisateur
+- Actions asynchrones :
+  - `register(credentials)` : Inscription utilisateur
+  - `login(credentials)` : Connexion
+  - `logout()` : Déconnexion avec nettoyage des tokens
+  - `fetchCurrentUser()` : Récupération du profil
+  - `initialize()` : Restauration de session au chargement
+- Persistance dans `localStorage` (accessToken, refreshToken)
+
+**Client HTTP Axios (`src/api/client.ts`)**
+- Configuration :
+  - baseURL : `http://localhost:3001` (auth-service)
+  - timeout : 10s
+  - Headers : `Content-Type: application/json`
+- Intercepteur request :
+  - Injection automatique du token JWT dans header `Authorization: Bearer {token}`
+- Intercepteur response :
+  - Détection des erreurs 401 (Unauthorized)
+  - Refresh automatique des tokens expirés via `/auth/refresh`
+  - Retry de la requête originale avec nouveau token
+  - Déconnexion automatique si refresh échoue
+
+**Vues (Pages)**
+- **LoginView** (`/login`) :
+  - Formulaire : email + password
+  - Validation HTML5 (required, type="email")
+  - Affichage des erreurs backend
+  - Redirection vers `/dashboard` après succès
+  - Lien vers inscription
+- **RegisterView** (`/register`) :
+  - Formulaire : name + email + password + confirmPassword
+  - Validation client : mots de passe identiques, min 8 caractères
+  - Message de succès + redirection automatique
+  - Lien vers connexion
+- **DashboardView** (`/dashboard`) :
+  - Tableau de bord protégé (🔒 JWT requis)
+  - Affichage des infos utilisateur (nom, email, role)
+  - Cartes statistiques (profil, email vérifié, session active)
+  - Bouton déconnexion
+  - Message de bienvenue
+
+**Routing (`src/router/index.ts`)**
+- Routes configurées :
+  - `/` → Redirect vers `/dashboard`
+  - `/login` (meta: `requiresGuest`) → Accessible uniquement si NON connecté
+  - `/register` (meta: `requiresGuest`) → Idem
+  - `/dashboard` (meta: `requiresAuth`) → Accessible uniquement si connecté
+- Navigation guard global (`router.beforeEach`) :
+  - Vérification de `isAuthenticated`
+  - Initialisation du store si token présent mais user absent
+  - Redirection `/login` si route protégée sans auth
+  - Redirection `/dashboard` si déjà connecté et route invité
+  - Préservation de l'URL de destination dans query param `?redirect=`
+
+**Configuration**
+- `tsconfig.app.json` : Path aliases (`@/*` → `./src/*`, `@webudget/shared-types`)
+- `vite.config.ts` : Résolution des alias, port 5173
+- `tailwind.config.js` : Scan des fichiers `.vue` pour purge CSS
+- `postcss.config.js` : TailwindCSS + Autoprefixer
+
+**Styles**
+- Reset CSS global (margin, padding, box-sizing)
+- Font stack système : -apple-system, Segoe UI, Roboto, etc.
+- Tailwind utility classes pour tous les composants
+- Responsive design (sm, md, lg breakpoints)
+- Palette de couleurs :
+  - Bleu (primary) : bg-blue-600, hover:bg-blue-700
+  - Vert (success) : bg-green-50, text-green-600
+  - Rouge (error) : bg-red-50, text-red-800
+  - Gris (neutral) : bg-gray-50, bg-gray-100
+
+**Intégration Backend**
+- Communication avec auth-service (port 3001)
+- Utilisation de tous les endpoints REST :
+  - POST `/auth/register`
+  - POST `/auth/login`
+  - POST `/auth/refresh`
+  - POST `/auth/logout`
+  - GET `/auth/me`
+- Gestion des erreurs réseau et 4xx/5xx
+- Affichage user-friendly des messages d'erreur
+
+### 🔧 Modifié (Changed)
+- `pnpm-workspace.yaml` : Ajout du frontend au workspace (`- 'frontend'`)
+- Lockfile pnpm mis à jour avec 74 nouveaux packages (Vue, Vite, Tailwind, etc.)
+
+---
+
 ## [0.2.0] - 2025-12-17
 
 ### ✨ Ajouté (Added)
