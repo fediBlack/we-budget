@@ -14,11 +14,13 @@ services:
     environment:
       # 🎯 Credentials (en dur pour le dev, .env en prod)
       POSTGRES_USER: webudget
-      POSTGRES_PASSWORD: webudget_dev_password
-      POSTGRES_DB: webudget_db
+      POSTGRES_PASSWORD: webudget_dev_2024
+      POSTGRES_DB: webudget_auth
     volumes:
       # 💾 Persiste les données (survit au redémarrage du container)
       - postgres_data:/var/lib/postgresql/data
+      # 📜 Script pour créer les bases de données de chaque service
+      - ./scripts/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
     healthcheck:
       # ✅ Vérifie que PostgreSQL est prêt
       test: ['CMD-SHELL', 'pg_isready -U webudget']
