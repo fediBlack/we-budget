@@ -176,14 +176,14 @@ export class TransactionsService {
       where: { accountId },
     });
 
-    const balance = transactions.reduce((sum, t) => {
+    const balance = transactions.reduce((sum, t: any) => {
       const amount = Number(t.amount);
       if (t.type === 'INCOME') return sum + amount;
       if (t.type === 'EXPENSE') return sum - amount;
       return sum;
     }, 0);
 
-    await this.prisma.account.update({
+    await (this.prisma as any).account.update({
       where: { id: accountId },
       data: { balance: new Decimal(balance) },
     });
