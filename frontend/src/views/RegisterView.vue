@@ -58,7 +58,7 @@
             placeholder="••••••••"
             required
             autocomplete="new-password"
-            :error="form.password && form.password.length < 8 ? 'Minimum 8 caractères' : ''"
+            :error="form.password && form.password.length < 8 ? 'Minimum 8 caractères' : undefined"
           />
 
           <Input
@@ -68,7 +68,7 @@
             placeholder="••••••••"
             required
             autocomplete="new-password"
-            :error="passwordMismatch ? 'Les mots de passe ne correspondent pas' : ''"
+            :error="passwordMismatch ? 'Les mots de passe ne correspondent pas' : undefined"
           />
         </div>
 
@@ -77,7 +77,7 @@
           <Button
             type="submit"
             :loading="authStore.loading"
-            :disabled="authStore.loading || passwordMismatch"
+            :disabled="authStore.loading || !!passwordMismatch"
             class="w-full"
           >
             Créer mon compte
