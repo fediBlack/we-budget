@@ -26,6 +26,63 @@
     <!-- Contenu principal -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="px-4 py-6 sm:px-0">
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <router-link to="/accounts" class="block bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                  <span class="text-2xl">💰</span>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Comptes
+                  </dt>
+                  <dd class="text-lg font-semibold text-gray-900">
+                    Gérer mes comptes
+                  </dd>
+                </div>
+              </div>
+            </div>
+          </router-link>
+
+          <div class="block bg-white overflow-hidden shadow rounded-lg opacity-50">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                  <span class="text-2xl">📊</span>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Événements
+                  </dt>
+                  <dd class="text-lg font-semibold text-gray-900">
+                    Bientôt disponible
+                  </dd>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="block bg-white overflow-hidden shadow rounded-lg opacity-50">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                  <span class="text-2xl">💬</span>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Chat
+                  </dt>
+                  <dd class="text-lg font-semibold text-gray-900">
+                    Bientôt disponible
+                  </dd>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="bg-white overflow-hidden shadow rounded-lg">
           <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">

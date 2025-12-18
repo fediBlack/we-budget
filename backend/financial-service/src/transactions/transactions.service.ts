@@ -137,7 +137,7 @@ export class TransactionsService {
       if (t.type === 'EXPENSE') acc[cat].expense += Number(t.amount);
       acc[cat].count += 1;
       return acc;
-    }, {});
+    }, {} as Record<string, { income: number; expense: number; count: number }>);
 
     return {
       totalIncome,

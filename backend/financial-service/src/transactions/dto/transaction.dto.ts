@@ -1,5 +1,5 @@
 import { IsNumber, IsEnum, IsOptional, IsString, IsDateString, Min } from 'class-validator';
-import { TransactionType, TransactionCategory } from '@webudget/shared-types';
+import { TransactionType, TransactionCategory } from '@prisma/client';
 
 // 📝 DTO pour créer une transaction
 export class CreateTransactionDto {

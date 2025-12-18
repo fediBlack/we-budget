@@ -10,18 +10,22 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
+      "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./enums": {
       "import": "./dist/enums/index.js",
+      "require": "./dist/enums/index.js",
       "types": "./dist/enums/index.d.ts"
     },
     "./entities": {
       "import": "./dist/entities/index.js",
+      "require": "./dist/entities/index.js",
       "types": "./dist/entities/index.d.ts"
     },
     "./dtos": {
       "import": "./dist/dtos/index.js",
+      "require": "./dist/dtos/index.js",
       "types": "./dist/dtos/index.d.ts"
     }
   },

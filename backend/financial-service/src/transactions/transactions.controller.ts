@@ -11,6 +11,7 @@ import {
   Request,
   ParseIntPipe,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 import { TransactionsService } from './transactions.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateTransactionDto, UpdateTransactionDto } from './dto/transaction.dto';
@@ -22,19 +23,19 @@ export class TransactionsController {
 
   // 📋 GET /transactions?accountId=1 - Liste des transactions
   @Get()
-  findAll(@Query('accountId', ParseIntPipe) accountId: number, @Request() req) {
+  findAll(@Query('accountId', ParseIntPipe) accountId: number, @Request() req: ExpressRequest & { user: { userId: number } }) {
     return this.transactionsService.findAll(accountId, req.user.userId);
   }
 
   // 🔍 GET /transactions/:id - Détails d'une transaction
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number, @Request() req) {
+  findOne(@Param('id', ParseIntPipe) id: number, @Request() req: ExpressRequest & { user: { userId: number } }) {
     return this.transactionsService.findOne(id, req.user.userId);
   }
 
   // ➕ POST /transactions - Créer une transaction
   @Post()
-  create(@Request() req, @Body() dto: CreateTransactionDto) {
+  create(@Request() req: ExpressRequest & { user: { userId: number } }, @Body() dto: CreateTransactionDto) {
     return this.transactionsService.create(req.user.userId, dto);
   }
 
@@ -42,7 +43,7 @@ export class TransactionsController {
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Request() req,
+    @Request() req: ExpressRequest & { user: { userId: number } },
     @Body() dto: UpdateTransactionDto,
   ) {
     return this.transactionsService.update(id, req.user.userId, dto);
@@ -50,13 +51,13 @@ export class TransactionsController {
 
   // 🗑️ DELETE /transactions/:id - Supprimer une transaction
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @Request() req) {
+  remove(@Param('id', ParseIntPipe) id: number, @Request() req: ExpressRequest & { user: { userId: number } }) {
     return this.transactionsService.remove(id, req.user.userId);
   }
 
   // 📊 GET /transactions/stats/:accountId - Statistiques
   @Get('stats/:accountId')
-  getStatistics(@Param('accountId', ParseIntPipe) accountId: number, @Request() req) {
+  getStatistics(@Param('accountId', ParseIntPipe) accountId: number, @Request() req: ExpressRequest & { user: { userId: number } }) {
     return this.transactionsService.getStatistics(accountId, req.user.userId);
   }
 }
