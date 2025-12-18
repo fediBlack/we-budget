@@ -1,50 +1,151 @@
-# 🐳 Docker Compose Configuration
-# Ce fichier définit tous les services qui tournent ensemble
+# 🐳 Docker Compose Configuration - WeBudget Full Stack
+# Ce fichier définit tous les services pour déploiement complet
 
 version: '3.8'
 
 services:
   # 🗄️ PostgreSQL - Base de données principale
   postgres:
-    image: postgres:16-alpine  # Version légère de PostgreSQL 16
+    image: postgres:16-alpine
     container_name: webudget-postgres
     restart: unless-stopped
     ports:
-      - '5432:5432'  # Port accessible depuis l'hôte
+      - '5432:5432'
     environment:
-      # 🎯 Credentials (en dur pour le dev, .env en prod)
       POSTGRES_USER: webudget
       POSTGRES_PASSWORD: webudget_dev_2024
-      POSTGRES_DB: webudget_auth
+      POSTGRES_MULTIPLE_DATABASES: webudget_auth,webudget_financial,webudget_events,webudget_chat
     volumes:
-      # 💾 Persiste les données (survit au redémarrage du container)
       - postgres_data:/var/lib/postgresql/data
-      # 📜 Script pour créer les bases de données de chaque service
-      - ./scripts/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
+      - ./docker/postgres/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+    networks:
+      - webudget-network
     healthcheck:
-      # ✅ Vérifie que PostgreSQL est prêt
       test: ['CMD-SHELL', 'pg_isready -U webudget']
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # 🌐 Adminer - Interface web pour gérer la DB
-  # Accès : http://localhost:8080
+  # 🔐 Auth Service (Port 3001)
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    container_name: webudget-auth
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://webudget:webudget_dev_2024@postgres:5432/webudget_auth?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-super-secret-jwt-access-key-change-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-super-secret-jwt-refresh-key-change-in-production}
+      PORT: 3001
+      NODE_ENV: production
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - webudget-network
+
+  # 💰 Financial Service (Port 3002)
+  financial-service:
+    build:
+      context: ./backend/financial-service
+      dockerfile: Dockerfile
+    container_name: webudget-financial
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://webudget:webudget_dev_2024@postgres:5432/webudget_financial?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-super-secret-jwt-access-key-change-in-production}
+      PORT: 3002
+      NODE_ENV: production
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - webudget-network
+
+  # 🔔 Events Service (Port 3003)
+  events-service:
+    build:
+      context: ./backend/events-service
+      dockerfile: Dockerfile
+    container_name: webudget-events
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://webudget:webudget_dev_2024@postgres:5432/webudget_events?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-super-secret-jwt-access-key-change-in-production}
+      PORT: 3003
+      NODE_ENV: production
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - webudget-network
+
+  # 💬 Chat Service (Port 3004)
+  chat-service:
+    build:
+      context: ./backend/chat-service
+      dockerfile: Dockerfile
+    container_name: webudget-chat
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://webudget:webudget_dev_2024@postgres:5432/webudget_chat?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-super-secret-jwt-access-key-change-in-production}
+      PORT: 3004
+      NODE_ENV: production
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "3004:3004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - webudget-network
+
+  # 🎨 Frontend (Vue 3)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: webudget-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - auth-service
+      - financial-service
+      - events-service
+      - chat-service
+    networks:
+      - webudget-network
+
+  # 🌐 Adminer - Interface DB
   adminer:
     image: adminer:latest
     container_name: webudget-adminer
     restart: unless-stopped
     ports:
-      - '8080:8080'  # Interface web
+      - '8080:8080'
     depends_on:
       - postgres
+    networks:
+      - webudget-network
 
 # 📦 Volumes persistants
 volumes:
   postgres_data:
     driver: local
 
-# 🔗 Réseau (optionnel, Docker en crée un par défaut)
+# 🔗 Réseau
 networks:
-  default:
-    name: webudget-network
+  webudget-network:
+    driver: bridge
