@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../node_modules/.prisma/client-financial';
 
 // 🗄️ Service Prisma - Gère la connexion à la base de données
 @Injectable()

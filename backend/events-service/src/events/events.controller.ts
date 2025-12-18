@@ -15,7 +15,7 @@ import { Request as ExpressRequest } from 'express';
 import { EventsService } from './events.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
-import { EventStatus } from '@prisma/client';
+import { EventStatus } from '../../node_modules/.prisma/client-events';
 
 @Controller('events')
 @UseGuards(JwtAuthGuard)

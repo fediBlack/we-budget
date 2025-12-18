@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
-import { EventStatus } from '@prisma/client';
+import { EventStatus } from '../../node_modules/.prisma/client-events';
 
 @Injectable()
 export class EventsService {
   constructor(private prisma: PrismaService) {}
 
   // 📋 List all events for a user
-  async findAll(userId: number, status?: EventStatus) {
+  async findAll(userId: number, status?: EventStatus): Promise<any[]> {
     const where: any = { userId };
     if (status) {
       where.status = status;
@@ -26,7 +26,7 @@ export class EventsService {
   }
 
   // 🔍 Get a single event
-  async findOne(id: number, userId: number) {
+  async findOne(id: number, userId: number): Promise<any> {
     const event = await this.prisma.event.findUnique({
       where: { id },
       include: {
@@ -46,7 +46,7 @@ export class EventsService {
   }
 
   // ➕ Create a new event
-  async create(userId: number, dto: CreateEventDto) {
+  async create(userId: number, dto: CreateEventDto): Promise<any> {
     return this.prisma.event.create({
       data: {
         userId,
@@ -59,7 +59,7 @@ export class EventsService {
   }
 
   // ✏️ Update event status (mark as read/archived)
-  async update(id: number, userId: number, dto: UpdateEventDto) {
+  async update(id: number, userId: number, dto: UpdateEventDto): Promise<any> {
     const event = await this.findOne(id, userId);
 
     const data: any = {};

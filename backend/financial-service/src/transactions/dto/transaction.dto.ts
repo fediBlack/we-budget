@@ -1,5 +1,5 @@
 import { IsNumber, IsEnum, IsOptional, IsString, IsDateString, Min } from 'class-validator';
-import { TransactionType, TransactionCategory } from '@prisma/client';
+import { TransactionType, TransactionCategory } from '../../../node_modules/.prisma/client-financial';
 
 // 📝 DTO pour créer une transaction
 export class CreateTransactionDto {

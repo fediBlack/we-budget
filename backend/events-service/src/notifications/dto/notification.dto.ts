@@ -1,5 +1,5 @@
 import { IsEnum, IsString, IsOptional, IsInt } from 'class-validator';
-import { NotificationChannel } from '@prisma/client';
+import { NotificationChannel } from '../../../node_modules/.prisma/client-events';
 
 export class CreateNotificationDto {
   @IsInt()

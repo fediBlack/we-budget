@@ -1,5 +1,5 @@
 import { IsEnum, IsString, IsOptional, IsObject } from 'class-validator';
-import { EventType, EventStatus } from '@prisma/client';
+import { EventType, EventStatus } from '../../../node_modules/.prisma/client-events';
 
 export class CreateEventDto {
   @IsEnum(EventType)

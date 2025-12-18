@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsOptional, IsNumber, Min } from 'class-validator';
-import { AccountType, Currency } from '@prisma/client';
+import { AccountType, Currency } from '../../../node_modules/.prisma/client-financial';
 
 // 📝 DTO pour créer un compte
 export class CreateAccountDto {
