@@ -5,6 +5,31 @@ Toutes les modifications notables de ce projet seront documentées ici.
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [0.3.4] - 2025-12-18
+
+### 🐛 Corrigé (Fixed)
+- Correction de l'import CSS de vue3-ui-kit (`style.css` au lieu de `dist/vue3-ui-kit.css`)
+
+## [0.3.3] - 2025-12-18
+
+### 🐛 Corrigé (Fixed)
+- Correction des types TypeScript pour les props de vue3-ui-kit
+- Retour de `undefined` au lieu de `""` pour les props optionnelles
+- Conversion explicite en boolean avec `!!` pour la prop `disabled`
+
+## [0.3.2] - 2025-12-17
+
+### 🐛 Corrigé (Fixed)
+- Configuration TypeScript frontend (suppression extends @vue/tsconfig)
+- Configuration complète self-contained sans dépendances externes
+
+## [0.3.1] - 2025-12-17
+
+### ♻️ Refactorisé (Refactored)
+- Utilisation des composants vue3-ui-kit (Button, Input, Alert)
+- Import depuis GitHub (github:fediBlack/vue3-ui-kit#v0.1.0)
+- Réduction de 41 lignes de code (refactoring des vues)
+
 ## [0.3.0] - 2025-12-17
 
 ### ✨ Ajouté (Added)
