@@ -64,7 +64,7 @@
             </div>
           </router-link>
 
-          <div class="block bg-white overflow-hidden shadow rounded-lg opacity-50">
+          <router-link to="/chat" class="block bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow">
             <div class="px-4 py-5 sm:p-6">
               <div class="flex items-center">
                 <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
@@ -75,7 +75,7 @@
                     Chat
                   </dt>
                   <dd class="text-lg font-semibold text-gray-900">
-                    Bientôt disponible
+                    Conversations
                   </dd>
                 </div>
               </div>

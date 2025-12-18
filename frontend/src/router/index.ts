@@ -6,6 +6,7 @@ import DashboardView from '@/views/DashboardView.vue';
 import AccountsView from '@/views/AccountsView.vue';
 import AccountDetailView from '@/views/AccountDetailView.vue';
 import EventsView from '@/views/EventsView.vue';
+import ChatView from '@/views/ChatView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +49,12 @@ const router = createRouter({
       path: '/events',
       name: 'events',
       component: EventsView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: ChatView,
       meta: { requiresAuth: true },
     },
   ],
