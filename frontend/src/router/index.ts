@@ -5,6 +5,7 @@ import RegisterView from '@/views/RegisterView.vue';
 import DashboardView from '@/views/DashboardView.vue';
 import AccountsView from '@/views/AccountsView.vue';
 import AccountDetailView from '@/views/AccountDetailView.vue';
+import EventsView from '@/views/EventsView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,12 @@ const router = createRouter({
       path: '/accounts/:id',
       name: 'account-detail',
       component: AccountDetailView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/events',
+      name: 'events',
+      component: EventsView,
       meta: { requiresAuth: true },
     },
   ],

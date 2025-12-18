@@ -1,0 +1,147 @@
+// This is your Prisma schema file for events-service
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ENUMS
+// ═══════════════════════════════════════════════════════════════════════════
+
+enum UserRole {
+  USER
+  PREMIUM
+  ADMIN
+}
+
+enum EventType {
+  BUDGET_LIMIT      // Limite de budget atteinte
+  RECURRING_DUE     // Transaction récurrente due
+  LOW_BALANCE       // Solde faible
+  LARGE_TRANSACTION // Transaction importante
+  ACCOUNT_SHARED    // Compte partagé avec vous
+  REMINDER          // Rappel personnalisé
+}
+
+enum EventStatus {
+  PENDING
+  READ
+  ARCHIVED
+}
+
+enum NotificationChannel {
+  IN_APP      // Notification dans l'app
+  EMAIL       // Email
+  PUSH        // Push notification (future)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODELS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// 👤 User model (synchronized from auth-service)
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  name          String
+  avatar        String?
+  role          UserRole @default(USER)
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  events            Event[]
+  notifications     Notification[]
+  notificationPrefs NotificationPreferences?
+
+  @@map("users")
+}
+
+// 📅 Event - Financial events (budget limits, recurring transactions, etc.)
+model Event {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  type        EventType
+  title       String
+  description String?
+  metadata    Json?       // Extra data: accountId, transactionId, amount, etc.
+  status      EventStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  readAt      DateTime?
+  archivedAt  DateTime?
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  @@index([userId, status])
+  @@index([userId, createdAt])
+  @@map("events")
+}
+
+// 🔔 Notification - Actual sent notifications
+model Notification {
+  id        Int                 @id @default(autoincrement())
+  userId    Int
+  eventId   Int?
+  channel   NotificationChannel
+  title     String
+  body      String
+  sentAt    DateTime            @default(now())
+  readAt    DateTime?
+  clickedAt DateTime?
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event? @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+// ⚙️ NotificationPreferences - User notification settings
+model NotificationPreferences {
+  id     Int @id @default(autoincrement())
+  userId Int @unique
+
+  // Channels enabled
+  enableInApp  Boolean @default(true)
+  enableEmail  Boolean @default(true)
+  enablePush   Boolean @default(false)
+
+  // Event types enabled
+  budgetLimit      Boolean @default(true)
+  recurringDue     Boolean @default(true)
+  lowBalance       Boolean @default(true)
+  largeTransaction Boolean @default(true)
+  accountShared    Boolean @default(true)
+  reminder         Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
+}
+
+// ⏰ Reminder - User custom reminders
+model Reminder {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String?
+  dueDate     DateTime
+  isRecurring Boolean  @default(false)
+  frequency   String?  // DAILY, WEEKLY, MONTHLY, YEARLY
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId, dueDate])
+  @@map("reminders")
+}
